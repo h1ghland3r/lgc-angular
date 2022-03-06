@@ -19,7 +19,7 @@ export class BlogService {
     private http: HttpClient
   ) { }
 
-  getAll() {
+  getAll(): Observable<Post[]> {
     return this.http.get<Post[]>(`${environment.apiUrl}/posts`)
       .pipe(
         catchError(this.errorHandler)
@@ -33,8 +33,8 @@ export class BlogService {
       )
   }
 
-  getAllCommentsByPost(id: number): Observable<Post[]> {
-    return this.http.get<Post[]>(`${environment.apiUrl}/posts/${id}/comments`)
+  getAllCommentsByPost(id: number): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${environment.apiUrl}/posts/${id}/comments`)
       .pipe(
         catchError(this.errorHandler)
       )

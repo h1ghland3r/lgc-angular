@@ -1,0 +1,22 @@
+@import './../../shared/styles/utility.scss';
+
+.about {
+
+  &__avatar {
+    border-radius: 50%;
+    width: 200px;
+  }
+
+  &__description {
+  }
+
+  &__description--social {
+    ul, ol {
+      padding: 0;
+    }
+
+    ol > svg {
+      margin-right: 5px;
+    }
+  }
+}

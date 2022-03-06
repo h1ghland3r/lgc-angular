@@ -1,0 +1,49 @@
+<article class="posts" fxLayout="column" fxLayout.gt-sm="row wrap">
+  <mat-card class="post--card box-shadow" fxFlex.gt-sm="30%" *ngFor="let item of posts">
+    <mat-card-header>
+      <div mat-card-avatar><mat-icon>person_pin</mat-icon></div>
+      <mat-card-title>
+        <a class="post--title" [routerLink]="['/post/', item.slug]" routerLinkActive> {{item.title}} </a>
+      </mat-card-title>
+      <mat-card-subtitle>
+        <span>
+          {{item.publish_date | date: 'mediumDate' }} -
+        </span>
+        <span class="post--author">
+          {{item.author}}
+        </span>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <!-- <div [innerHTML]="item.content"></div> -->
+        <a class="post--description" [routerLink]="['/post/', item.slug]" routerLinkActive> {{item.description}} </a>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <mat-icon class="post--messages">message</mat-icon>
+    </mat-card-actions>
+  </mat-card>
+</article>
+
+<article class="posts__content" fxLayout="column">
+  <mat-card class="posts__content--card box-shadow" fxFlex *ngFor="let item of posts">
+    <div id="{{item.slug}}" *ngIf="activeRoute === item.slug">
+      <mat-card-header>
+        <div mat-card-avatar><mat-icon>person_pin</mat-icon></div>
+        <mat-card-title>
+          <div class="posts__content--title"> {{item.title}} </div>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <span>
+            {{item.publish_date | date: 'mediumDate' }} -
+          </span>
+          <span class="posts__content--author">
+            {{item.author}}
+          </span>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+          <div class="posts__content--description" [innerHTML]="item.content"></div>
+      </mat-card-content>
+    </div>
+  </mat-card>
+</article>
