@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Post, Comment } from '../models/blog.model';
 
@@ -15,9 +15,16 @@ export class BlogService {
     })
   }
 
+  private feedStatus$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  currentFeedStatus$ = this.feedStatus$.asObservable();
+
   constructor(
     private http: HttpClient
   ) { }
+
+  setFeedStatus(value: boolean): void {
+    this.feedStatus$.next(value);
+  }
 
   getAll(): Observable<Post[]> {
     return this.http.get<Post[]>(`${environment.apiUrl}/posts`)

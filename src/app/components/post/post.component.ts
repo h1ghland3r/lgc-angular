@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { BlogService } from 'src/app/shared/services/blog.service';
 
 @Component({
   selector: 'app-post',
@@ -10,9 +11,13 @@ export class PostComponent implements OnInit {
 
   @Input() posts: any;
   activeRoute!: string;
+  showFeedFromNavigation: boolean = false;
+  showFeed: boolean = true;
+  showPost: boolean = false;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private blogService: BlogService
   ) {
   }
 
@@ -24,6 +29,20 @@ export class PostComponent implements OnInit {
         }
       }
     });
+
+    this.blogService.currentFeedStatus$.subscribe((value: boolean) => {
+      this.showFeedFromNavigation = value;
+      this.showPost = false;
+    });
+  }
+
+  openPost(event: MouseEvent): void {
+    this.showFeed = false;
+    this.showFeedFromNavigation = false;
+    this.showPost = true;
+    console.log((event.target as HTMLInputElement).id);
+    console.log('Feed: ' + this.showFeed);
+    console.log('Post: ' + this.showPost);
   }
 
 }

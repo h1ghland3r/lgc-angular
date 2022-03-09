@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BlogService } from 'src/app/shared/services/blog.service';
 
 @Component({
   selector: 'app-navigation',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavigationComponent implements OnInit {
 
-  constructor() { }
+  showFeed: boolean = true;
+
+  constructor(
+    private blogService: BlogService
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  openFeed(): void {
+    this.blogService.setFeedStatus(this.showFeed);
   }
 
 }
