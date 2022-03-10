@@ -4,11 +4,11 @@
       <mat-card-header>
         <div mat-card-avatar><mat-icon>person_pin</mat-icon></div>
         <mat-card-title>
-          <a [id]=item.slug class="post--title" [routerLink]="['/post/', item.slug]" routerLinkActive> {{item.title}} </a>
+          <a [id]=item.slug class="post--title" [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)"> {{item.title}} </a>
         </mat-card-title>
         <mat-card-subtitle>
           <span>
-            {{item.publish_date | date: 'mediumDate' }} -
+            {{item.publish_date | date: 'mediumDate' }}
           </span>
           <span class="post--author">
             {{item.author}}
@@ -16,7 +16,10 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-          <a [id]=item.slug class="post--description" [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)"> {{item.description}} </a>
+          <a [id]=item.slug class="post--description" [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)">
+            <ng-container *ngIf="item.description.length > 70">{{ (item.description | slice: 0:70) + '...' }}</ng-container>
+            <ng-container *ngIf="item.description.length < 70">{{ item.description }}</ng-container>
+          </a>
       </mat-card-content>
       <mat-card-actions align="end">
         <mat-icon class="post--messages">message</mat-icon>
@@ -27,7 +30,7 @@
 
 <article class="posts__content" fxLayout="column">
   <ng-container *ngIf="showPost">
-    <mat-card class="posts__content--card box-shadow" fxFlex *ngFor="let item of posts">
+    <mat-card class="posts__content--card" fxFlex *ngFor="let item of posts">
       <div id="{{item.slug}}" *ngIf="activeRoute === item.slug">
         <mat-card-header>
           <div mat-card-avatar><mat-icon>person_pin</mat-icon></div>
@@ -36,7 +39,7 @@
           </mat-card-title>
           <mat-card-subtitle>
             <span>
-              {{item.publish_date | date: 'mediumDate' }} -
+              {{item.publish_date | date: 'mediumDate' }}
             </span>
             <span class="posts__content--author">
               {{item.author}}
@@ -47,6 +50,23 @@
             <div class="posts__content--description" [innerHTML]="item.content"></div>
         </mat-card-content>
       </div>
+    </mat-card>
+
+    <mat-card class="posts__comment" fxFlex *ngFor="let item of comments">
+      <mat-card-header>
+        <div mat-card-avatar><mat-icon>person_pin</mat-icon></div>
+        <mat-card-title>
+          <span class="posts__comment--user">
+            {{item.user}}
+          </span>
+          <span>
+            {{item.date | date: 'mediumDate' }}
+          </span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <div class="posts__comment--description"> {{item.content}} </div>
+      </mat-card-content>
     </mat-card>
   </ng-container>
 </article>

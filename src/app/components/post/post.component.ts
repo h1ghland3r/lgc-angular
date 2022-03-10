@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { BlogService } from 'src/app/shared/services/blog.service';
+import { Post, Comment } from './../../shared/models/blog.model';
 
 @Component({
   selector: 'app-post',
@@ -9,11 +10,13 @@ import { BlogService } from 'src/app/shared/services/blog.service';
 })
 export class PostComponent implements OnInit {
 
-  @Input() posts: any;
+  @Input() posts: Post[] = [];
+  @Input() comments: Comment[] = [];
   activeRoute!: string;
   showFeedFromNavigation: boolean = false;
   showFeed: boolean = true;
   showPost: boolean = false;
+  postId: number = 0;
 
   constructor(
     private router: Router,
@@ -36,13 +39,28 @@ export class PostComponent implements OnInit {
     });
   }
 
+  getCommentsByPost(postId: number) {
+    this.blogService.getAllCommentsByPost(postId)
+      .subscribe(
+        res => {
+          if (!!res) {
+            this.comments = res;
+          }
+        },
+        error => {
+          //TODO Handle error
+        });
+  }
+
   openPost(event: MouseEvent): void {
     this.showFeed = false;
     this.showFeedFromNavigation = false;
     this.showPost = true;
-    console.log((event.target as HTMLInputElement).id);
-    console.log('Feed: ' + this.showFeed);
-    console.log('Post: ' + this.showPost);
+
+    let attributeId = (event.target as HTMLInputElement)?.id;
+    this.postId = parseInt(attributeId.replace('blog-post-', ''));
+    this.getCommentsByPost(this.postId);
+
   }
 
 }

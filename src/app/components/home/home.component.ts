@@ -25,11 +25,11 @@ export class HomeComponent implements OnInit {
       .subscribe(
         res => {
           if (!!res) {
-            console.log(res);
             this.posts = res;
           }
         },
         error => {
+          //TODO Handle error
         });
   }
 
