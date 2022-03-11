@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Post, Comment } from '../models/blog.model';
 
@@ -43,6 +43,9 @@ export class BlogService {
   getAllCommentsByPost(id: number): Observable<Comment[]> {
     return this.http.get<Comment[]>(`${environment.apiUrl}/posts/${id}/comments`)
       .pipe(
+        map((comments: Comment[]) => {
+          return comments.sort((a: Comment, b: Comment) => (new Date(b.date)).getTime() - (new Date(a.date)).getTime());
+        }),
         catchError(this.errorHandler)
       )
   }

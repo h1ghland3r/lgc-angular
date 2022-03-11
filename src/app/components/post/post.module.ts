@@ -4,7 +4,7 @@ import { PostComponent } from './post.component';
 import { AppMaterialModule } from 'src/app/app.material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
-
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -15,7 +15,9 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     AppMaterialModule,
     FlexLayoutModule,
-    RouterModule
+    RouterModule,
+    ReactiveFormsModule,
+    FormsModule
   ],
   exports: [
     PostComponent

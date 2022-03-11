@@ -33,7 +33,9 @@
     <mat-card class="posts__content--card" fxFlex *ngFor="let item of posts">
       <div id="{{item.slug}}" *ngIf="activeRoute === item.slug">
         <mat-card-header>
-          <div mat-card-avatar><mat-icon>person_pin</mat-icon></div>
+          <div mat-card-avatar>
+            <mat-icon>person_pin</mat-icon>
+          </div>
           <mat-card-title>
             <div class="posts__content--title"> {{item.title}} </div>
           </mat-card-title>
@@ -47,26 +49,55 @@
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            <div class="posts__content--description" [innerHTML]="item.content"></div>
+          <div class="posts__content--description" [innerHTML]="item.content"></div>
         </mat-card-content>
       </div>
     </mat-card>
+  </ng-container>
 
-    <mat-card class="posts__comment" fxFlex *ngFor="let item of comments">
-      <mat-card-header>
-        <div mat-card-avatar><mat-icon>person_pin</mat-icon></div>
-        <mat-card-title>
-          <span class="posts__comment--user">
-            {{item.user}}
-          </span>
-          <span>
-            {{item.date | date: 'mediumDate' }}
-          </span>
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
+  <ng-container *ngIf="showPost">
+    <section class="mb-20 mt-20">
+      <form [formGroup]="commentsForm" class="posts__form">
+        <div fxFlex.gt-sm="50" fxLayout="column">
+          <mat-form-field appearance="fill" class="mb-5">
+            <mat-label for="comment">Comment:</mat-label>
+            <textarea matInput name="comment" id="comment" rows="5" formControlName="comment"
+              placeholder="Enter your comment here" required></textarea>
+            <mat-error *ngIf="isInvalid('comment') || commentsForm.invalid">
+              Comment is required
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="mb-5">
+            <mat-label for="name">Name:</mat-label>
+            <input matInput id="name" name="name" formControlName="name" placeholder="Enter your name" required>
+            <mat-error *ngIf="isInvalid('name') || commentsForm.invalid">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+          <button type="submit" mat-raised-button color="primary" (click)="addComment()">Add Comment</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="mb-20 mt-20" fxLayout="column">
+      <mat-card class="posts__comment" fxFlex *ngFor="let item of comments">
+        <mat-card-header>
+          <div mat-card-avatar>
+            <mat-icon>message</mat-icon>
+          </div>
+          <mat-card-title>
+            <span class="posts__comment--user">
+              {{item.user}}
+            </span>
+            <span class="posts__comment--date">
+              {{item.date | date: 'mediumDate' }}
+            </span>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
           <div class="posts__comment--description"> {{item.content}} </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
+    </section>
   </ng-container>
 </article>

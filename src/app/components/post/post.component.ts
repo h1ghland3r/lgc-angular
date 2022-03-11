@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { FormBuilder,Validators } from "@angular/forms";
 import { BlogService } from 'src/app/shared/services/blog.service';
 import { Post, Comment } from './../../shared/models/blog.model';
 
@@ -18,9 +19,15 @@ export class PostComponent implements OnInit {
   showPost: boolean = false;
   postId: number = 0;
 
+  commentsForm = this.fb.group({
+    name : [null, Validators.required],
+    comment : [null, Validators.required],
+  })
+
   constructor(
     private router: Router,
-    private blogService: BlogService
+    private blogService: BlogService,
+    private fb: FormBuilder
   ) {
   }
 
@@ -44,6 +51,7 @@ export class PostComponent implements OnInit {
       .subscribe(
         res => {
           if (!!res) {
+            // let sorted = res.sort((a: any, b: any[]) => new Date(a.date) > new Date(b.date));
             this.comments = res;
           }
         },
@@ -61,6 +69,19 @@ export class PostComponent implements OnInit {
     this.postId = parseInt(attributeId.replace('blog-post-', ''));
     this.getCommentsByPost(this.postId);
 
+  }
+
+  addComment() {
+    if (this.commentsForm.invalid) {
+      return;
+    }
+  }
+
+  isInvalid(field: string) {
+    return (
+      (!this.commentsForm?.get(field)?.valid && this.commentsForm?.get(field)?.touched) ||
+      (this.commentsForm?.get(field)?.untouched)
+    );
   }
 
 }

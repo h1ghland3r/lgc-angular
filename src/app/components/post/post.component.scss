@@ -1,4 +1,5 @@
 @import "~@angular/material/theming";
+@import './../../shared/styles/utility.scss';
 @import './../../shared/styles/variables.scss';
 
 mat-card {
@@ -122,17 +123,34 @@ mat-card {
   }
 
   &__comment {
+    mat-card {
+      &-header {
+        background: rgba(40, 7, 223, 0.35);
+        border-bottom: 1px solid mat-color($primary);
+      }
+
+      &-title {
+        font-size: 16px;
+      }
+    }
 
     ::ng-deep .mat-card-avatar {
       margin-top: 3px;
+      color: mat-color($primary);
     }
 
     &--user {
+      color: #5520b3;
+
       &:after {
         content: "•";
         display: inline-block;
         margin-right: 8px;
       }
+    }
+
+    &--date {
+      color: #5520b3;
     }
   }
 }
