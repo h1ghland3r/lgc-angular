@@ -22,7 +22,7 @@
           </a>
       </mat-card-content>
       <mat-card-actions align="end">
-        <mat-icon class="post--messages">message</mat-icon>
+        <mat-icon [id]=item.slug class="post--messages" [routerLink]="['/post/', item.slug]" fragment="comments" routerLinkActive (click)="openPost($event)">message</mat-icon>
       </mat-card-actions>
     </mat-card>
   </ng-container>
@@ -31,7 +31,7 @@
 <article class="posts__content" fxLayout="column">
   <ng-container *ngIf="showPost">
     <mat-card class="posts__content--card" fxFlex *ngFor="let item of posts">
-      <div id="{{item.slug}}" *ngIf="activeRoute === item.slug">
+      <div id="{{item.slug}}" *ngIf="activeRoute === item.slug || activeRoute === item.slug + '#comments'">
         <mat-card-header>
           <div mat-card-avatar>
             <mat-icon>person_pin</mat-icon>
@@ -80,23 +80,73 @@
     </section>
 
     <section class="mb-20 mt-20" fxLayout="column">
-      <mat-card class="posts__comment" fxFlex *ngFor="let item of comments">
+      <mat-card id="commentCard" class="posts__comment" fxFlex *ngFor="let comment of getCommentsWithoutReplies()">
+
         <mat-card-header>
           <div mat-card-avatar>
             <mat-icon>message</mat-icon>
           </div>
           <mat-card-title>
             <span class="posts__comment--user">
-              {{item.user}}
+              {{comment.user}}
             </span>
             <span class="posts__comment--date">
-              {{item.date | date: 'mediumDate' }}
+              {{comment.date | date: 'mediumDate' }}
             </span>
+            <span>{{comment.id}}</span>
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="posts__comment--description"> {{item.content}} </div>
+          <div class="posts__comment--description"> {{comment.content}} </div>
+          <div class="posts__comment--reply">
+            <mat-icon>reply</mat-icon>
+          </div>
+
+
+          <div class="posts__comment--replies" *ngFor="let reply of getRepliesByComment(comment.id)">
+            <mat-card-header>
+              <div mat-card-avatar>
+                <mat-icon>message</mat-icon>
+              </div>
+              <mat-card-title>
+                <span class="posts__comment--user">
+                  {{reply.user}}
+                </span>
+                <span class="posts__comment--date">
+                  {{reply.date | date: 'mediumDate' }}
+                </span>
+                <!-- <span>{{reply.id}}</span> -->
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="posts__comment--description"> {{reply.content}} </div>
+              <div class="posts__comment--reply">
+                <mat-icon>reply</mat-icon>
+              </div>
+            </mat-card-content>
+          </div>
         </mat-card-content>
+
+          <!-- <mat-card-header>
+            <div mat-card-avatar>
+              <mat-icon>message</mat-icon>
+            </div>
+            <mat-card-title>
+              <span class="posts__comment--user">
+                {{comment.user}}
+              </span>
+              <span class="posts__comment--date">
+                {{comment.date | date: 'mediumDate' }}
+              </span>
+              <span>{{comment.id}}</span>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="posts__comment--description"> {{comment.content}} </div>
+            <div class="posts__comment--reply">
+              <mat-icon>reply</mat-icon>
+            </div>
+          </mat-card-content> -->
       </mat-card>
     </section>
   </ng-container>

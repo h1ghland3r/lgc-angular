@@ -50,8 +50,8 @@ export class BlogService {
       )
   }
 
-  addCommentToPost(id: number, comment: Comment): Observable<any> {
-    return this.http.post<Post>(`${environment.apiUrl}/posts/${id}/comments`, JSON.stringify(comment), this.httpOptions)
+  addCommentToPost(id: number, content: any): Observable<any> {
+    return this.http.post<Post>(`${environment.apiUrl}/posts/${id}/comments`, JSON.stringify(content), this.httpOptions)
       .pipe(
         catchError(this.errorHandler)
       )

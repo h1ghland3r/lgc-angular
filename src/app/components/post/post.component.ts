@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { FormBuilder,Validators } from "@angular/forms";
+import { ViewChild, ElementRef } from '@angular/core';
+import { FormBuilder, Validators } from "@angular/forms";
 import { BlogService } from 'src/app/shared/services/blog.service';
 import { Post, Comment } from './../../shared/models/blog.model';
 
@@ -36,6 +37,14 @@ export class PostComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         if (event.url) {
           this.activeRoute = event.url.replace('/post/', '');
+          if (this.postId) {
+            this.getCommentsByPost(this.postId);
+          }
+
+          if (this.activeRoute === '/home') {
+            this.showFeedFromNavigation = true;
+            this.showPost = false;
+          }
         }
       }
     });
@@ -49,16 +58,29 @@ export class PostComponent implements OnInit {
   getCommentsByPost(postId: number) {
     this.blogService.getAllCommentsByPost(postId)
       .subscribe(
-        res => {
+        (res: Comment[]) => {
           if (!!res) {
-            // let sorted = res.sort((a: any, b: any[]) => new Date(a.date) > new Date(b.date));
             this.comments = res;
+            console.log(this.comments);
+            if (this.activeRoute.includes('#comments')) {
+              this.scrollToComments();
+            }
           }
         },
         error => {
           //TODO Handle error
         });
   }
+
+  getCommentsWithoutReplies(): Comment[] {
+    return this.comments.filter((comment) => !comment.parent_id);
+  }
+
+  getRepliesByComment(commentId: number) {
+    return this.comments
+      .filter(comment => commentId === comment.parent_id)
+      .sort((a: Comment, b: Comment) => (new Date(b.date)).getTime() - (new Date(a.date)).getTime());
+  };
 
   openPost(event: MouseEvent): void {
     this.showFeed = false;
@@ -68,13 +90,30 @@ export class PostComponent implements OnInit {
     let attributeId = (event.target as HTMLInputElement)?.id;
     this.postId = parseInt(attributeId.replace('blog-post-', ''));
     this.getCommentsByPost(this.postId);
-
   }
+
+  scrollToComments() {
+    document.querySelector('#commentCard')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+ }
 
   addComment() {
     if (this.commentsForm.invalid) {
       return;
     }
+
+    const comment = {
+      parent_id: null,
+      date: new Date().toISOString().split('T')[0],
+      user: this.commentsForm.get('name')?.value,
+      content: this.commentsForm.get('comment')?.value,
+    }
+
+    this.blogService.addCommentToPost(this.postId, comment)
+      .subscribe(res => {
+        if (!!res) {
+          this.getCommentsByPost(this.postId);
+        }
+      })
   }
 
   isInvalid(field: string) {
