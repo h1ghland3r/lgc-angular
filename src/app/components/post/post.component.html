@@ -51,13 +51,18 @@
         <mat-card-content>
           <div class="posts__content--description" [innerHTML]="item.content"></div>
         </mat-card-content>
+        <mat-card-actions>
+          <div class="posts__content--reply" (click)="openReply(0)">
+            <mat-icon>reply</mat-icon>
+          </div>
+        </mat-card-actions>
       </div>
     </mat-card>
   </ng-container>
 
   <ng-container *ngIf="showPost">
-    <section class="mb-20 mt-20">
-      <form [formGroup]="commentsForm" class="posts__form">
+    <section id="replyForm" class="mb-20 mt-20">
+      <form [formGroup]="commentsForm" class="posts__form" *ngIf="showReply">
         <div fxFlex.gt-sm="50" fxLayout="column">
           <mat-form-field appearance="fill" class="mb-5">
             <mat-label for="comment">Comment:</mat-label>
@@ -74,14 +79,14 @@
               Name is required
             </mat-error>
           </mat-form-field>
-          <button type="submit" mat-raised-button color="primary" (click)="addComment()">Add Comment</button>
+          <button type="submit" mat-raised-button color="primary" (click)="addComment()" [disabled]="commentsForm.invalid">Add Comment</button>
         </div>
       </form>
     </section>
 
     <section class="mb-20 mt-20" fxLayout="column">
+      <!-- Root Level Comments -->
       <mat-card id="commentCard" class="posts__comment" fxFlex *ngFor="let comment of getCommentsWithoutReplies()">
-
         <mat-card-header>
           <div mat-card-avatar>
             <mat-icon>message</mat-icon>
@@ -93,60 +98,62 @@
             <span class="posts__comment--date">
               {{comment.date | date: 'mediumDate' }}
             </span>
-            <span>{{comment.id}}</span>
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div class="posts__comment--description"> {{comment.content}} </div>
-          <div class="posts__comment--reply">
+          <div class="posts__comment--reply" (click)="openReply(comment.id)">
             <mat-icon>reply</mat-icon>
           </div>
 
+          <!-- Level 1 Nested Replies which should be moved to proper component -->
+          <div *ngIf="getRepliesByComment(comment.id).length > 0">
+            <div class="posts__comment--replies" *ngFor="let replyLevelOne of getRepliesByComment(comment.id)">
+              <mat-card-header>
+                <div mat-card-avatar>
+                  <mat-icon>message</mat-icon>
+                </div>
+                <mat-card-title>
+                  <span class="posts__comment--user">
+                    {{replyLevelOne.user}}
+                  </span>
+                  <span class="posts__comment--date">
+                    {{replyLevelOne.date | date: 'mediumDate' }}
+                  </span>
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="posts__comment--description"> {{replyLevelOne.content}} </div>
+                <div class="posts__comment--reply" (click)="openReply(replyLevelOne.id)">
+                  <mat-icon>reply</mat-icon>
+                </div>
 
-          <div class="posts__comment--replies" *ngFor="let reply of getRepliesByComment(comment.id)">
-            <mat-card-header>
-              <div mat-card-avatar>
-                <mat-icon>message</mat-icon>
-              </div>
-              <mat-card-title>
-                <span class="posts__comment--user">
-                  {{reply.user}}
-                </span>
-                <span class="posts__comment--date">
-                  {{reply.date | date: 'mediumDate' }}
-                </span>
-                <!-- <span>{{reply.id}}</span> -->
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-              <div class="posts__comment--description"> {{reply.content}} </div>
-              <div class="posts__comment--reply">
-                <mat-icon>reply</mat-icon>
-              </div>
-            </mat-card-content>
+                <!-- Level 2 Nested Replies -->
+                <div class="posts__comment--replies" *ngFor="let replyLevelTwo of getRepliesByComment(replyLevelOne.id)">
+                  <mat-card-header>
+                    <div mat-card-avatar>
+                      <mat-icon>message</mat-icon>
+                    </div>
+                    <mat-card-title>
+                      <span class="posts__comment--user">
+                        {{replyLevelTwo.user}}
+                      </span>
+                      <span class="posts__comment--date">
+                        {{replyLevelTwo.date | date: 'mediumDate' }}
+                      </span>
+                    </mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <div class="posts__comment--description"> {{replyLevelTwo.content}} </div>
+                    <!-- <div class="posts__comment--reply">
+                      <mat-icon>reply</mat-icon>
+                    </div> -->
+                  </mat-card-content>
+                </div>
+              </mat-card-content>
+            </div>
           </div>
         </mat-card-content>
-
-          <!-- <mat-card-header>
-            <div mat-card-avatar>
-              <mat-icon>message</mat-icon>
-            </div>
-            <mat-card-title>
-              <span class="posts__comment--user">
-                {{comment.user}}
-              </span>
-              <span class="posts__comment--date">
-                {{comment.date | date: 'mediumDate' }}
-              </span>
-              <span>{{comment.id}}</span>
-            </mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="posts__comment--description"> {{comment.content}} </div>
-            <div class="posts__comment--reply">
-              <mat-icon>reply</mat-icon>
-            </div>
-          </mat-card-content> -->
       </mat-card>
     </section>
   </ng-container>

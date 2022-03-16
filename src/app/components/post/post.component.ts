@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, Validators } from "@angular/forms";
 import { BlogService } from 'src/app/shared/services/blog.service';
@@ -18,7 +18,9 @@ export class PostComponent implements OnInit {
   showFeedFromNavigation: boolean = false;
   showFeed: boolean = true;
   showPost: boolean = false;
+  showReply: boolean = false;
   postId: number = 0;
+  replyParentId!: number;
 
   commentsForm = this.fb.group({
     name : [null, Validators.required],
@@ -44,7 +46,15 @@ export class PostComponent implements OnInit {
           if (this.activeRoute === '/home') {
             this.showFeedFromNavigation = true;
             this.showPost = false;
+            this.showReply = false;
+            this.resetForm();
           }
+        }
+      }
+
+      if (event instanceof NavigationStart) {
+        if (event.restoredState) {
+          this.router.navigate(['/home']);
         }
       }
     });
@@ -61,7 +71,6 @@ export class PostComponent implements OnInit {
         (res: Comment[]) => {
           if (!!res) {
             this.comments = res;
-            console.log(this.comments);
             if (this.activeRoute.includes('#comments')) {
               this.scrollToComments();
             }
@@ -80,6 +89,7 @@ export class PostComponent implements OnInit {
     return this.comments
       .filter(comment => commentId === comment.parent_id)
       .sort((a: Comment, b: Comment) => (new Date(b.date)).getTime() - (new Date(a.date)).getTime());
+
   };
 
   openPost(event: MouseEvent): void {
@@ -92,17 +102,19 @@ export class PostComponent implements OnInit {
     this.getCommentsByPost(this.postId);
   }
 
-  scrollToComments() {
-    document.querySelector('#commentCard')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
- }
+  openReply(id: number): void {
+    this.replyParentId = id;
+    this.showReply = true;
+    this.scrollToReply();
+  }
 
-  addComment() {
+  addComment(): void {
     if (this.commentsForm.invalid) {
       return;
     }
 
     const comment = {
-      parent_id: null,
+      parent_id: this.replyParentId,
       date: new Date().toISOString().split('T')[0],
       user: this.commentsForm.get('name')?.value,
       content: this.commentsForm.get('comment')?.value,
@@ -111,9 +123,16 @@ export class PostComponent implements OnInit {
     this.blogService.addCommentToPost(this.postId, comment)
       .subscribe(res => {
         if (!!res) {
+          this.showReply = false;
           this.getCommentsByPost(this.postId);
+          this.resetForm();
         }
       })
+  }
+
+  resetForm(): void {
+    this.commentsForm.reset();
+    this.replyParentId!;
   }
 
   isInvalid(field: string) {
@@ -123,4 +142,11 @@ export class PostComponent implements OnInit {
     );
   }
 
+  scrollToComments() {
+    document.querySelector('#commentCard')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  scrollToReply() {
+    document.querySelector('#replyForm')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 }
