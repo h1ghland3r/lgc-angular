@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
       .subscribe(
         res => {
           if (!!res) {
-            this.posts = res;
+            this.posts = res.sort((a: Post, b: Post) => (new Date(b.publish_date)).getTime() - (new Date(a.publish_date)).getTime());
           }
         },
         error => {
