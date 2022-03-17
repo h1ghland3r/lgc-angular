@@ -1,11 +1,11 @@
 <article class="posts" fxLayout="column" fxLayout.gt-sm="row wrap">
   <ng-container *ngIf="showFeed || showFeedFromNavigation">
-    <mat-card class="post--card box-shadow" fxFlex.gt-sm="30%" *ngFor="let item of posts">
+    <mat-card aria-label="post card" class="post--card box-shadow" fxFlex.gt-sm="30%" *ngFor="let item of posts">
       <mat-card-header>
-        <div mat-card-avatar><mat-icon>person_pin</mat-icon></div>
+        <div aria-label="Author Avatar" mat-card-avatar><mat-icon>person_pin</mat-icon></div>
         <mat-card-title>
           <h2>
-            <button type="button" [id]=item.slug class="post--title" [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)"> {{item.title}} </button>
+            <button type="button" aria-label="Open Post" class="post--title" [id]=item.slug [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)"> {{item.title}} </button>
           </h2>
         </mat-card-title>
         <mat-card-subtitle>
@@ -19,15 +19,15 @@
       </mat-card-header>
       <mat-card-content>
           <p>
-            <button type="button" [id]=item.slug class="post--description" [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)">
+            <button type="button" aria-label="Open Post" class="post--description" [id]=item.slug  [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)">
               <ng-container *ngIf="item.description.length > 70">{{ (item.description | slice: 0:70) + '...' }}</ng-container>
               <ng-container *ngIf="item.description.length < 70">{{ item.description }}</ng-container>
             </button>
           </p>
       </mat-card-content>
       <mat-card-actions align="end">
-        <button class="post--messages" (click)="openPost($event)">
-          <mat-icon [id]=item.slug [routerLink]="['/post/', item.slug]" fragment="comments" routerLinkActive >message</mat-icon>
+        <button aria-label="Open Post" class="post--messages" (click)="openPost($event)">
+          <mat-icon aria-label="Open Comments" [id]=item.slug [routerLink]="['/post/', item.slug]" fragment="comments" routerLinkActive>message</mat-icon>
         </button>
       </mat-card-actions>
     </mat-card>
@@ -36,7 +36,7 @@
 
 <article class="posts__content" fxLayout="column">
   <ng-container *ngIf="showPost">
-    <mat-card class="posts__content--card" fxFlex *ngFor="let item of posts">
+    <mat-card aria-label="post content" class="posts__content--card" fxFlex *ngFor="let item of posts">
       <div id="{{item.slug}}" *ngIf="activeRoute === item.slug || activeRoute === item.slug + '#comments'">
         <mat-card-header>
           <div mat-card-avatar>
@@ -58,7 +58,7 @@
           <div class="posts__content--description" [innerHTML]="item.content"></div>
         </mat-card-content>
         <mat-card-actions>
-          <button class="posts__content--reply" (click)="openReply(0)">
+          <button aria-label="Open reply comment area" class="posts__content--reply" (click)="openReply(0)">
             <mat-icon>reply</mat-icon>
           </button>
         </mat-card-actions>
@@ -67,7 +67,7 @@
   </ng-container>
 
   <ng-container *ngIf="showPost">
-    <section id="replyForm" class="mb-20 mt-20">
+    <section aria-label="reply comment form"id="replyForm" class="mb-20 mt-20">
       <form [formGroup]="commentsForm" class="posts__form" *ngIf="showReply">
         <fieldset>
           <div fxFlex.ls-sm="100" fxFlex.gt-sm="50" fxLayout="column">
@@ -111,7 +111,7 @@
         <mat-card-content>
           <div class="posts__comment--description"> {{comment.content}} </div>
           <div class="posts__comment--actions">
-            <button class="posts__comment--reply" (click)="openReply(comment.id)">
+            <button type="button" aria-label="Open reply comment box" class="posts__comment--reply" (click)="openReply(comment.id)">
               <mat-icon>reply</mat-icon>
             </button>
           </div>
@@ -135,7 +135,7 @@
               <mat-card-content>
                 <div class="posts__comment--description"> {{replyLevelOne.content}} </div>
                 <div class="posts__comment--actions">
-                  <button class="posts__comment--reply" (click)="openReply(replyLevelOne.id)">
+                  <button type="button" aria-label="Open reply comment box" class="posts__comment--reply" (click)="openReply(replyLevelOne.id)">
                     <mat-icon>reply</mat-icon>
                   </button>
                 </div>
