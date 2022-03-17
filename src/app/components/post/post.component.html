@@ -4,7 +4,9 @@
       <mat-card-header>
         <div mat-card-avatar><mat-icon>person_pin</mat-icon></div>
         <mat-card-title>
-          <a [id]=item.slug class="post--title" [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)"> {{item.title}} </a>
+          <h2>
+            <button type="button" [id]=item.slug class="post--title" [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)"> {{item.title}} </button>
+          </h2>
         </mat-card-title>
         <mat-card-subtitle>
           <span>
@@ -16,13 +18,17 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-          <a [id]=item.slug class="post--description" [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)">
-            <ng-container *ngIf="item.description.length > 70">{{ (item.description | slice: 0:70) + '...' }}</ng-container>
-            <ng-container *ngIf="item.description.length < 70">{{ item.description }}</ng-container>
-          </a>
+          <p>
+            <button type="button" [id]=item.slug class="post--description" [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)">
+              <ng-container *ngIf="item.description.length > 70">{{ (item.description | slice: 0:70) + '...' }}</ng-container>
+              <ng-container *ngIf="item.description.length < 70">{{ item.description }}</ng-container>
+            </button>
+          </p>
       </mat-card-content>
       <mat-card-actions align="end">
-        <mat-icon [id]=item.slug class="post--messages" [routerLink]="['/post/', item.slug]" fragment="comments" routerLinkActive (click)="openPost($event)">message</mat-icon>
+        <button class="post--messages" (click)="openPost($event)">
+          <mat-icon [id]=item.slug [routerLink]="['/post/', item.slug]" fragment="comments" routerLinkActive >message</mat-icon>
+        </button>
       </mat-card-actions>
     </mat-card>
   </ng-container>
@@ -52,9 +58,9 @@
           <div class="posts__content--description" [innerHTML]="item.content"></div>
         </mat-card-content>
         <mat-card-actions>
-          <div class="posts__content--reply" (click)="openReply(0)">
+          <button class="posts__content--reply" (click)="openReply(0)">
             <mat-icon>reply</mat-icon>
-          </div>
+          </button>
         </mat-card-actions>
       </div>
     </mat-card>
@@ -63,24 +69,26 @@
   <ng-container *ngIf="showPost">
     <section id="replyForm" class="mb-20 mt-20">
       <form [formGroup]="commentsForm" class="posts__form" *ngIf="showReply">
-        <div fxFlex.gt-sm="50" fxLayout="column">
-          <mat-form-field appearance="fill" class="mb-5">
-            <mat-label for="comment">Comment:</mat-label>
-            <textarea matInput name="comment" id="comment" rows="5" formControlName="comment"
-              placeholder="Enter your comment here" required></textarea>
-            <mat-error *ngIf="isInvalid('comment') || commentsForm.invalid">
-              Comment is required
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="fill" class="mb-5">
-            <mat-label for="name">Name:</mat-label>
-            <input matInput id="name" name="name" formControlName="name" placeholder="Enter your name" required>
-            <mat-error *ngIf="isInvalid('name') || commentsForm.invalid">
-              Name is required
-            </mat-error>
-          </mat-form-field>
-          <button type="submit" mat-raised-button color="primary" (click)="addComment()" [disabled]="commentsForm.invalid">Add Comment</button>
-        </div>
+        <fieldset>
+          <div fxFlex.ls-sm="100" fxFlex.gt-sm="50" fxLayout="column">
+            <mat-form-field appearance="fill" class="mb-5">
+              <mat-label for="comment">Comment:</mat-label>
+              <textarea matInput name="comment" id="comment" rows="5" formControlName="comment"
+                placeholder="Enter your comment here" required></textarea>
+              <mat-error *ngIf="isInvalid('comment') || commentsForm.invalid">
+                Comment is required
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="mb-5">
+              <mat-label for="name">Name:</mat-label>
+              <input matInput id="name" name="name" formControlName="name" placeholder="Enter your name" required>
+              <mat-error *ngIf="isInvalid('name') || commentsForm.invalid">
+                Name is required
+              </mat-error>
+            </mat-form-field>
+            <button type="submit" mat-raised-button color="primary" (click)="addComment()" [disabled]="commentsForm.invalid">Add Comment</button>
+          </div>
+        </fieldset>
       </form>
     </section>
 
@@ -102,8 +110,10 @@
         </mat-card-header>
         <mat-card-content>
           <div class="posts__comment--description"> {{comment.content}} </div>
-          <div class="posts__comment--reply" (click)="openReply(comment.id)">
-            <mat-icon>reply</mat-icon>
+          <div class="posts__comment--actions">
+            <button class="posts__comment--reply" (click)="openReply(comment.id)">
+              <mat-icon>reply</mat-icon>
+            </button>
           </div>
 
           <!-- Level 1 Nested Replies which should be moved to proper component -->
@@ -124,8 +134,10 @@
               </mat-card-header>
               <mat-card-content>
                 <div class="posts__comment--description"> {{replyLevelOne.content}} </div>
-                <div class="posts__comment--reply" (click)="openReply(replyLevelOne.id)">
-                  <mat-icon>reply</mat-icon>
+                <div class="posts__comment--actions">
+                  <button class="posts__comment--reply" (click)="openReply(replyLevelOne.id)">
+                    <mat-icon>reply</mat-icon>
+                  </button>
                 </div>
 
                 <!-- Level 2 Nested Replies -->

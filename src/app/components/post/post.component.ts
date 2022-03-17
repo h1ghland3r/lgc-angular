@@ -4,6 +4,7 @@ import { ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, Validators } from "@angular/forms";
 import { BlogService } from 'src/app/shared/services/blog.service';
 import { Post, Comment } from './../../shared/models/blog.model';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-post',
@@ -30,7 +31,8 @@ export class PostComponent implements OnInit {
   constructor(
     private router: Router,
     private blogService: BlogService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private titleService: Title
   ) {
   }
 
@@ -63,6 +65,10 @@ export class PostComponent implements OnInit {
       this.showFeedFromNavigation = value;
       this.showPost = false;
     });
+  }
+
+  setTitle(title: String): void {
+    this.titleService.setTitle(title ? 'LGC Angular - ' + title : 'LGC Angular - Home');
   }
 
   getCommentsByPost(postId: number) {
@@ -100,6 +106,7 @@ export class PostComponent implements OnInit {
     let attributeId = (event.target as HTMLInputElement)?.id;
     this.postId = parseInt(attributeId.replace('blog-post-', ''));
     this.getCommentsByPost(this.postId);
+    this.setTitle(attributeId);
   }
 
   openReply(id: number): void {

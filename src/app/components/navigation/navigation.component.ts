@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { BlogService } from 'src/app/shared/services/blog.service';
 
 @Component({
@@ -11,7 +12,8 @@ export class NavigationComponent implements OnInit {
   showFeed: boolean = true;
 
   constructor(
-    private blogService: BlogService
+    private blogService: BlogService,
+    private titleService: Title
   ) { }
 
   ngOnInit(): void {
@@ -19,6 +21,11 @@ export class NavigationComponent implements OnInit {
 
   openFeed(): void {
     this.blogService.setFeedStatus(this.showFeed);
+    this.setTitle();
+  }
+
+  setTitle(): void {
+    this.titleService.setTitle('LGC Angular - Home');
   }
 
 }

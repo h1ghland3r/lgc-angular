@@ -1,8 +1,7 @@
-import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { BlogService } from './../../shared/services/blog.service';
 import { Post } from 'src/app/shared/models/blog.model';
-
+import { Meta, Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -13,8 +12,17 @@ export class HomeComponent implements OnInit {
   posts: Post[] = [];
 
   constructor(
-    private blogService: BlogService
-  ) { }
+    private blogService: BlogService,
+    private titleService: Title,
+    private meta: Meta,
+  ) {
+    this.titleService.setTitle('LGC Angular - Home');
+    this.meta.addTags([
+      { name: 'description', content: 'LGC Angular Blog Application' },
+      { name: 'author', content: 'h1ghland3r' },
+      { name: 'keywords', content: 'Angular, Blog, Post' }
+    ]);
+  }
 
   ngOnInit(): void {
     this.getAllPosts();
@@ -32,5 +40,4 @@ export class HomeComponent implements OnInit {
           //TODO Handle error
         });
   }
-
 }

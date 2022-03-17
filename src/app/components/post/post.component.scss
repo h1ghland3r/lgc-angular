@@ -4,8 +4,7 @@
 
 mat-card {
   position: relative;
-  display: block;
-  display:flex;
+  display: flex;
   flex-direction: column;
   padding: 0;
   border-radius: 5px;
@@ -45,6 +44,8 @@ mat-card {
   }
 
   &-actions:last-child {
+    display: flex;
+    justify-content: flex-end;
     margin: 0 0 5px 0;
   }
 }
@@ -69,7 +70,7 @@ mat-card {
 .post {
   &--card {
     width: auto;
-    height: 180px;
+    height: 200px;
     margin: 10px 0;
 
     @media screen and (min-width: 600px) {
@@ -79,18 +80,27 @@ mat-card {
   }
 
   &--messages {
-    color: mat-color($primary);
-    position: relative;
-    left: -15px;
+    background: none;
+    border: none;
     cursor: pointer;
+    color: mat-color($primary);
+
+    mat-icon {
+      position: relative;
+      left: -5px;
+    }
 
     &:hover {
-      color: mat-color($primary, 0.85);
+      color: mat-color($primary, 0.65);
     }
   }
 
   &--title {
+    background: none;
+    border: none;
+    cursor: pointer;
     font-size: 22px;
+    padding: 0;
     text-decoration: none;
     color: #ffffff;
   }
@@ -106,6 +116,10 @@ mat-card {
   }
 
   &--description {
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
     font-size: 16px;
     text-decoration: none;
     color: #000;
@@ -133,6 +147,8 @@ mat-card {
     }
 
     &--reply {
+      background: none;
+      border: none;
       text-align: right;
       cursor: pointer;
 
@@ -149,6 +165,12 @@ mat-card {
         padding: 0;
         margin-bottom: 20px;
       }
+    }
+  }
+
+  &__form {
+    fieldset {
+      border: 0;
     }
   }
 
@@ -187,7 +209,14 @@ mat-card {
       color: #5520b3;
     }
 
+    &--actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
     &--reply {
+      background: none;
+      border: none;
       text-align: right;
       cursor: pointer;
 
