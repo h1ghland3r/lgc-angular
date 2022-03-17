@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { BlogService } from './../../shared/services/blog.service';
 import { Post } from 'src/app/shared/models/blog.model';
 import { Meta, Title } from '@angular/platform-browser';
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -15,6 +17,7 @@ export class HomeComponent implements OnInit {
     private blogService: BlogService,
     private titleService: Title,
     private meta: Meta,
+    private toastr: ToastrService
   ) {
     this.titleService.setTitle('LGC Angular - Home');
     this.meta.addTags([
@@ -37,7 +40,9 @@ export class HomeComponent implements OnInit {
           }
         },
         error => {
-          //TODO Handle error
+          this.toastr.error(error, '', {
+            positionClass: 'toast-top-right'
+          });
         });
   }
 }

@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, Validators } from "@angular/forms";
 import { BlogService } from 'src/app/shared/services/blog.service';
 import { Post, Comment } from './../../shared/models/blog.model';
 import { Title } from '@angular/platform-browser';
+import { ToastrService } from 'ngx-toastr';
+import { LoadingService } from 'src/app/shared/services/loading.service';
 
 @Component({
   selector: 'app-post',
@@ -16,6 +17,8 @@ export class PostComponent implements OnInit {
   @Input() posts: Post[] = [];
   @Input() comments: Comment[] = [];
   activeRoute!: string;
+  loading$ = this.loadingService.isLoading$;
+  showContent: boolean = false;
   showFeedFromNavigation: boolean = false;
   showFeed: boolean = true;
   showPost: boolean = false;
@@ -32,11 +35,21 @@ export class PostComponent implements OnInit {
     private router: Router,
     private blogService: BlogService,
     private fb: FormBuilder,
-    private titleService: Title
+    private titleService: Title,
+    private loadingService: LoadingService,
+    private toastr: ToastrService
   ) {
   }
 
   ngOnInit(): void {
+    // simulate loading
+    this.loadingService.show();
+    setTimeout(() => {
+      this.loadingService.hide();
+      this.showContent = true;
+    }, 2000);
+
+    // handle navigation routing
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         if (event.url) {
@@ -83,7 +96,9 @@ export class PostComponent implements OnInit {
           }
         },
         error => {
-          //TODO Handle error
+          this.toastr.error(error, '', {
+            positionClass: 'toast-top-right'
+          });
         });
   }
 
@@ -133,6 +148,9 @@ export class PostComponent implements OnInit {
           this.showReply = false;
           this.getCommentsByPost(this.postId);
           this.resetForm();
+          this.toastr.success('Comment added', '', {
+            positionClass: 'toast-top-right'
+          });
         }
       })
   }

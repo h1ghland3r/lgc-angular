@@ -5,7 +5,7 @@ import { AppMaterialModule } from 'src/app/app.material.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-
+import { LoadingSpinnerModule } from './../../shared/components/loading-spinner/loading-spinner.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +17,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     FlexLayoutModule,
     RouterModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    LoadingSpinnerModule
   ],
   exports: [
     PostComponent

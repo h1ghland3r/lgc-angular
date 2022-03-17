@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 import { AboutComponent } from './about.component';
 
@@ -21,5 +22,12 @@ describe('AboutComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have profile picture img tag', () => {
+    fixture.detectChanges();
+    const img = fixture.debugElement.nativeElement.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img).toBeTruthy();
   });
 });

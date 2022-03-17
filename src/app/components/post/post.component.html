@@ -1,38 +1,41 @@
-<article class="posts" fxLayout="column" fxLayout.gt-sm="row wrap">
-  <ng-container *ngIf="showFeed || showFeedFromNavigation">
-    <mat-card aria-label="post card" class="post--card box-shadow" fxFlex.gt-sm="30%" *ngFor="let item of posts">
-      <mat-card-header>
-        <div aria-label="Author Avatar" mat-card-avatar><mat-icon>person_pin</mat-icon></div>
-        <mat-card-title>
-          <h2>
-            <button type="button" aria-label="Open Post" class="post--title" [id]=item.slug [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)"> {{item.title}} </button>
-          </h2>
-        </mat-card-title>
-        <mat-card-subtitle>
-          <span>
-            {{item.publish_date | date: 'mediumDate' }}
-          </span>
-          <span class="post--author">
-            {{item.author}}
-          </span>
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-          <p>
-            <button type="button" aria-label="Open Post" class="post--description" [id]=item.slug  [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)">
-              <ng-container *ngIf="item.description.length > 70">{{ (item.description | slice: 0:70) + '...' }}</ng-container>
-              <ng-container *ngIf="item.description.length < 70">{{ item.description }}</ng-container>
-            </button>
-          </p>
-      </mat-card-content>
-      <mat-card-actions align="end">
-        <button aria-label="Open Post" class="post--messages" (click)="openPost($event)">
-          <mat-icon aria-label="Open Comments" [id]=item.slug [routerLink]="['/post/', item.slug]" fragment="comments" routerLinkActive>message</mat-icon>
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  </ng-container>
-</article>
+<app-loading-spinner *ngIf="loading$ | async"></app-loading-spinner>
+<div *ngIf="showContent">
+  <article class="posts" fxLayout="column" fxLayout.gt-sm="row wrap">
+    <ng-container *ngIf="showFeed || showFeedFromNavigation">
+      <mat-card aria-label="post card" class="post--card box-shadow" fxFlex.gt-sm="30%" *ngFor="let item of posts">
+        <mat-card-header>
+          <div aria-label="Author Avatar" mat-card-avatar><mat-icon>person_pin</mat-icon></div>
+          <mat-card-title>
+            <h2>
+              <button type="button" aria-label="Open Post" class="post--title" [id]=item.slug [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)"> {{item.title}} </button>
+            </h2>
+          </mat-card-title>
+          <mat-card-subtitle>
+            <span>
+              {{item.publish_date | date: 'mediumDate' }}
+            </span>
+            <span class="post--author">
+              {{item.author}}
+            </span>
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>
+              <button type="button" aria-label="Open Post" class="post--description" [id]=item.slug  [routerLink]="['/post/', item.slug]" routerLinkActive (click)="openPost($event)">
+                <ng-container *ngIf="item.description.length > 70">{{ (item.description | slice: 0:70) + '...' }}</ng-container>
+                <ng-container *ngIf="item.description.length < 70">{{ item.description }}</ng-container>
+              </button>
+            </p>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button aria-label="Open Post" class="post--messages" (click)="openPost($event)">
+            <mat-icon aria-label="Open Comments" [id]=item.slug [routerLink]="['/post/', item.slug]" fragment="comments" routerLinkActive>message</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </ng-container>
+  </article>
+</div>
 
 <article class="posts__content" fxLayout="column">
   <ng-container *ngIf="showPost">

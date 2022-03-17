@@ -1,9 +1,9 @@
-<mat-toolbar color="primary">
-  <mat-toolbar-row aria-label="navigation">
-    <h1>LGC Angular</h1>
+<mat-toolbar color="primary" aria-label="navigation">
+  <mat-toolbar-row>
+    <h1>{{navTitle}}</h1>
     <span class="menu-spacer"></span>
     <div>
-      <button type="button" mat-button aria-label="Open post feed" [routerLink]="'/home'" (click)="openFeed()"> Home </button>
+      <button type="button" mat-button aria-label="Open post feed" class="navigation__button" [routerLink]="'/home'" (click)="openFeed()"> Home </button>
     </div>
   </mat-toolbar-row>
 </mat-toolbar>

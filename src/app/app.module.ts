@@ -7,9 +7,12 @@ import { AppMaterialModule } from './app.material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './components/home/home.module';
 import { NavigationModule } from './components/navigation/navigation.module';
+import { ToastrModule } from 'ngx-toastr';
+
+import { LoadingService } from './shared/services/loading.service';
+import { BlogService } from 'src/app/shared/services/blog.service';
 
 import { AppComponent } from './app.component';
-
 @NgModule({
   declarations: [
     AppComponent
@@ -21,9 +24,13 @@ import { AppComponent } from './app.component';
     AppMaterialModule,
     HttpClientModule,
     HomeModule,
-    NavigationModule
+    NavigationModule,
+    ToastrModule.forRoot()
   ],
-  providers: [],
+  providers: [
+    BlogService,
+    LoadingService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

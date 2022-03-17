@@ -9,6 +9,7 @@ import { BlogService } from 'src/app/shared/services/blog.service';
 })
 export class NavigationComponent implements OnInit {
 
+  navTitle: string = 'LGC Angular';
   showFeed: boolean = true;
 
   constructor(

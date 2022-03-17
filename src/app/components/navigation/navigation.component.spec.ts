@@ -1,6 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NavigationComponent } from './navigation.component';
+import { BlogService } from 'src/app/shared/services/blog.service';
+
 
 describe('NavigationComponent', () => {
   let component: NavigationComponent;
@@ -8,7 +10,9 @@ describe('NavigationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NavigationComponent ]
+      declarations: [ NavigationComponent ],
+      imports: [ HttpClientTestingModule ],
+      providers: [ BlogService ]
     })
     .compileComponents();
   });
@@ -22,4 +26,13 @@ describe('NavigationComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should openFeed() to be called after click', fakeAsync(() => {
+    spyOn(component, 'openFeed');
+
+    let button = fixture.debugElement.nativeElement.querySelector('.navigation__button');
+    button.click();
+    tick();
+    expect(component.openFeed).toHaveBeenCalled();
+  }));
 });
